@@ -29,7 +29,7 @@ impl Vec3 {
         self.e.0 * self.e.0 + self.e.1 * self.e.1 + self.e.2 * self.e.2
     }
 
-    pub fn dot(&self, other: Self) -> f32 {
+    pub fn dot(&self, other: &Self) -> f32 {
          self.e.0 * other.e.0 + self.e.1 * other.e.1 + self.e.2 * other.e.2
     }
 
@@ -75,6 +75,18 @@ impl<'a, 'b> Add<&'b Vec3> for &'a Vec3 {
 }
 
 impl Sub for Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, other: Vec3) -> Vec3 {
+        Vec3::new(
+            self.e.0 - other.e.0,
+            self.e.1 - other.e.1,
+            self.e.2 - other.e.2,
+        )
+    }
+}
+
+impl<'a> Sub<Vec3> for &'a Vec3 {
     type Output = Vec3;
 
     fn sub(self, other: Vec3) -> Vec3 {
