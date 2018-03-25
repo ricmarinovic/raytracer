@@ -23,8 +23,11 @@ impl<'a> Ray<'a> {
     }
 
     pub fn color(&self) -> Vec3 {
-        if self.hit_sphere(Vec3::new(0.0, 0.0, -1.0), 0.5) {
-            Vec3::new(1.0, 0.0, 0.0)
+        let t = self.hit_sphere(Vec3::new(0.0, 0.0, -1.0), 0.5);
+
+        if t > 0.0 {
+            let n = (self.point_at_parameter(t) - Vec3::new(0.0, 0.0, -1.0)).unit_vector();
+            return Vec3::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0) * 0.5;
         } else {
             let unit_direction = self.direction().unit_vector();
             let t = 0.5 * (unit_direction.y() + 1.0);
@@ -32,16 +35,20 @@ impl<'a> Ray<'a> {
         }
     }
 
-    fn hit_sphere(&self, center: Vec3, radius: f32) -> bool {
-        let ray_origin: &Vec3 = self.origin();
-        let ray_direction: &Vec3 = self.direction();
+    fn hit_sphere(&self, center: Vec3, radius: f32) -> f32 {
+        let ray_origin = self.origin();
+        let ray_direction = self.direction();
 
-        let oc: Vec3 = ray_origin - center;
+        let origin_center = ray_origin - center;
         let a = ray_direction.dot(ray_direction);
-        let b = 2.0 * oc.dot(ray_direction);
-        let c = oc.dot(&oc) - radius * radius;
+        let b = 2.0 * origin_center.dot(ray_direction);
+        let c = origin_center.dot(&origin_center) - radius * radius;
         let discriminant = b * b - 4.0 * a * c;
 
-        discriminant > 0 as f32
+        if discriminant < 0.0 {
+            return -1.0;
+        } else {
+            return (-b - discriminant.sqrt()) / (a * 2.0);
+        }
     }
 }
