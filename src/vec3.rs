@@ -1,5 +1,6 @@
 use std::ops::{Add, Sub, Mul, Div};
 
+#[derive(Clone, Default)]
 pub struct Vec3 {
     pub e: (f32, f32, f32),
 }
@@ -90,6 +91,18 @@ impl<'a> Sub<Vec3> for &'a Vec3 {
     type Output = Vec3;
 
     fn sub(self, other: Vec3) -> Vec3 {
+        Vec3::new(
+            self.e.0 - other.e.0,
+            self.e.1 - other.e.1,
+            self.e.2 - other.e.2,
+        )
+    }
+}
+
+impl<'a, 'b> Sub<&'b Vec3> for &'a Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, other: &'b Vec3) -> Vec3 {
         Vec3::new(
             self.e.0 - other.e.0,
             self.e.1 - other.e.1,
