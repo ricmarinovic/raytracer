@@ -30,8 +30,8 @@ impl Hitable for Sphere {
         let ray_direction = ray.direction();
 
         let origin_center = ray_origin - &self.center;
-        let a = ray_direction.dot(&ray_direction);
-        let b = origin_center.dot(&ray_direction);
+        let a = ray_direction.dot(ray_direction);
+        let b = origin_center.dot(ray_direction);
         let c = origin_center.dot(&origin_center) - self.radius * self.radius;
         let discriminant = b * b - a * c;
 

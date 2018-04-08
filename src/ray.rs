@@ -1,3 +1,4 @@
+use random_in_unit_sphere;
 use vec3::Vec3;
 use hitable::*;
 use std::f32::MAX;
@@ -28,12 +29,10 @@ impl<'a> Ray<'a> {
         let mut record = HitRecord {
             ..HitRecord::default()
         };
-        if world.hit(&self, 0.0, MAX, &mut record) {
-            return Vec3::new(
-                record.normal.x() + 1.0,
-                record.normal.y() + 1.0,
-                record.normal.z() + 1.0,
-            ) * 0.5;
+
+        if world.hit(&self, 0.001, MAX, &mut record) {
+            let target = &record.p + &record.normal + random_in_unit_sphere();
+            return Ray::new(&record.p, &(target - &record.p)).color(world) * 0.5;
         } else {
             let unit_direction = self.direction().unit_vector();
             let t = 0.5 * (unit_direction.y() + 1.0);

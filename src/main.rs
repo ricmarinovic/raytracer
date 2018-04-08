@@ -39,6 +39,8 @@ fn main() {
 
             color = color / ns as f32;
 
+            color = Vec3::new(color.0.sqrt(), color.1.sqrt(), color.2.sqrt());
+
             let ir = (255.99 * color.0) as i32;
             let ig = (255.99 * color.1) as i32;
             let ib = (255.99 * color.2) as i32;
@@ -54,4 +56,13 @@ fn main() {
 fn drand48() -> f32 {
     let mut rng = thread_rng();
     rng.gen_range(0.0, 1.0)
+}
+
+fn random_in_unit_sphere() -> Vec3 {
+    let mut p: Vec3 = Vec3::new(drand48(), drand48(), drand48());
+    while p.squared_len() >= 1.0 {
+        p = Vec3::new(drand48(), drand48(), drand48())*2.0 - Vec3::new(1.0, 1.0, 1.0);
+    }
+
+    return p;
 }
